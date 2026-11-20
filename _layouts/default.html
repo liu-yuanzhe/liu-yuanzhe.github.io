@@ -9,7 +9,7 @@
   <meta name="author" content="{{ site.name }}" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
+  <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css?v={{ site.time | date: '%s' }}" />
   <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}" />
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet"
     type="text/css" />
@@ -152,6 +152,7 @@
 
           {% for category in categories_list %}
           <table id="{{category}}" style="
+                table-layout: fixed;
                 width: 100%;
                 border: 0px;
                 border-spacing: 0px;
@@ -169,10 +170,11 @@
                   ">
                 {% if post.video %}
                 <div class="publication-preview" tabindex="0" role="group"
+                  style="position: relative; width: 100%; max-width: 160px; aspect-ratio: 2326 / 1146; overflow: hidden"
                   aria-label="{{ post.title | escape }}: hover or focus to play video">
-                  <img src="{{ post.image | relative_url }}" alt="{{ post.title | escape }} video cover" />
-                  <video loop muted playsinline preload="none" poster="{{ post.image | relative_url }}" aria-hidden="true">
-                    <source src="{{ post.video | relative_url }}" type="video/mp4" />
+                  <video loop muted playsinline preload="metadata" poster="{{ post.image | relative_url }}" aria-hidden="true"
+                    style="display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: cover">
+                    <source src="{{ post.video | relative_url }}#t=0.5" type="video/mp4" />
                   </video>
                 </div>
                 {% else %}
@@ -185,7 +187,7 @@
                 {{post.authors}}
                 <br />
                 {% if post.venue_full %}
-                <span style="color: black">{{post.venue}}</span>{% if post.presentation %} <strong style="color: red">({{post.presentation}})</strong>{% endif %}
+                <em style="color: black">{{post.venue}}</em>{% if post.presentation %} <strong style="color: red">({{post.presentation}})</strong>{% endif %}
                 {% elsif post.venue == "CVPR" or post.venue == "NeurIPS" or post.venue == "COLM" or post.venue == "ECCV" %}
                 <font color="red"><em>{{post.venue}}</em>, {{ post.date | date: "%Y" }}</font>
                 {% else %}
@@ -195,19 +197,23 @@
                 <font style="color: red">{{post.highlight}}</font>
                 {% endif %}
                 <br />
+                <span class="publication-links" style="display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; row-gap: 4px; min-height: 20px">
+                <span>
                 {% if post.page %}
                 <a href="{{post.page}}">project page</a> / {% endif %} {% if
                 post.arxiv %} <a href="{{post.arxiv}}">arXiv</a> {% endif %}
                 {% if post.code %} / <a href="{{post.code}}"> code</a>
                 {% endif %}
+                </span>
                 {% if post.github %}
-                <span class="publication-github">
+                <span class="publication-github" style="display: inline-flex; align-items: center; gap: 4px; height: 20px; line-height: 0">
                   <a class="github-button" href="https://github.com/{{ post.github }}" data-icon="octicon-star"
                     data-show-count="true" aria-label="Star {{ post.github }} on GitHub">Star</a>
                   <a class="github-button" href="https://github.com/{{ post.github }}/fork" data-icon="octicon-repo-forked"
                     data-show-count="true" aria-label="Fork {{ post.github }} on GitHub">Fork</a>
                 </span>
                 {% endif %}
+                </span>
                 <p></p>
                 {{ post.excerpt }}
               </td>
@@ -265,8 +271,7 @@
     function stopPreview(preview) {
       const video = preview.querySelector("video");
       video.pause();
-      if (video.readyState > 0) video.currentTime = 0;
-      preview.classList.remove("is-playing");
+      if (video.readyState > 0) video.currentTime = 0.5;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -274,8 +279,8 @@
         const video = preview.querySelector("video");
         const play = () => {
           video.muted = true;
-          preview.classList.add("is-playing");
-          video.play().catch(() => preview.classList.remove("is-playing"));
+          if (video.readyState > 0) video.currentTime = 0;
+          video.play().catch(() => stopPreview(preview));
         };
         preview.addEventListener("mouseenter", play);
         preview.addEventListener("mouseleave", () => stopPreview(preview));

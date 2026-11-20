@@ -172,9 +172,11 @@
                 <div class="publication-preview" tabindex="0" role="group"
                   style="position: relative; width: 100%; max-width: 160px; aspect-ratio: 2326 / 1146; overflow: hidden"
                   aria-label="{{ post.title | escape }}: hover or focus to play video">
-                  <video loop muted playsinline preload="metadata" poster="{{ post.image | relative_url }}" aria-hidden="true"
-                    style="display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: cover">
-                    <source src="{{ post.video | relative_url }}#t=0.5" type="video/mp4" />
+                  <img src="{{ post.image | relative_url }}" alt="Project video cover"
+                    style="display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: cover" />
+                  <video loop muted playsinline preload="none" poster="{{ post.image | relative_url }}" aria-hidden="true"
+                    style="display: block; visibility: hidden; position: absolute; inset: 0; width: 100%; height: 100%; max-width: 100%; object-fit: cover">
+                    <source src="{{ post.video | relative_url }}" type="video/mp4" />
                   </video>
                 </div>
                 {% else %}
@@ -270,18 +272,28 @@
 
     function stopPreview(preview) {
       const video = preview.querySelector("video");
+      preview.dataset.playRequested = "false";
+      video.style.visibility = "hidden";
       video.pause();
-      if (video.readyState > 0) video.currentTime = 0.5;
+      if (video.readyState > 0) video.currentTime = 0;
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".publication-preview").forEach((preview) => {
         const video = preview.querySelector("video");
         const play = () => {
+          preview.dataset.playRequested = "true";
           video.muted = true;
           if (video.readyState > 0) video.currentTime = 0;
           video.play().catch(() => stopPreview(preview));
         };
+        video.addEventListener("playing", () => {
+          if (preview.dataset.playRequested === "true") {
+            video.style.visibility = "visible";
+          } else {
+            stopPreview(preview);
+          }
+        });
         preview.addEventListener("mouseenter", play);
         preview.addEventListener("mouseleave", () => stopPreview(preview));
         preview.addEventListener("focus", play);

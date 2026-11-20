@@ -167,14 +167,26 @@
                     vertical-align: middle;
                     min-width: 120px;
                   ">
+                {% if post.video %}
+                <div class="publication-preview" tabindex="0" role="group"
+                  aria-label="{{ post.title | escape }}: hover or focus to play video">
+                  <img src="{{ post.image | relative_url }}" alt="{{ post.title | escape }} video cover" />
+                  <video loop muted playsinline preload="none" poster="{{ post.image | relative_url }}" aria-hidden="true">
+                    <source src="{{ post.video | relative_url }}" type="video/mp4" />
+                  </video>
+                </div>
+                {% else %}
                 <img src="{{post.image}}" alt="project image" style="width: auto; height: auto; max-width: 100%" />
+                {% endif %}
               </td>
               <td style="padding: 0%; width: 75%; vertical-align: middle">
                 <h3>{{post.title}}</h3>
                 <br />
                 {{post.authors}}
                 <br />
-                {% if post.venue == "CVPR" or post.venue == "NeurIPS" or post.venue == "COLM" or post.venue == "ECCV" %}
+                {% if post.venue_full %}
+                <span style="color: black">{{post.venue}}</span>{% if post.presentation %} <strong style="color: red">({{post.presentation}})</strong>{% endif %}
+                {% elsif post.venue == "CVPR" or post.venue == "NeurIPS" or post.venue == "COLM" or post.venue == "ECCV" %}
                 <font color="red"><em>{{post.venue}}</em>, {{ post.date | date: "%Y" }}</font>
                 {% else %}
                 <em>{{post.venue}}</em>, {{ post.date | date: "%Y" }}
@@ -187,6 +199,14 @@
                 <a href="{{post.page}}">project page</a> / {% endif %} {% if
                 post.arxiv %} <a href="{{post.arxiv}}">arXiv</a> {% endif %}
                 {% if post.code %} / <a href="{{post.code}}"> code</a>
+                {% endif %}
+                {% if post.github %}
+                <span class="publication-github">
+                  <a class="github-button" href="https://github.com/{{ post.github }}" data-icon="octicon-star"
+                    data-show-count="true" aria-label="Star {{ post.github }} on GitHub">Star</a>
+                  <a class="github-button" href="https://github.com/{{ post.github }}/fork" data-icon="octicon-repo-forked"
+                    data-show-count="true" aria-label="Fork {{ post.github }} on GitHub">Fork</a>
+                </span>
                 {% endif %}
                 <p></p>
                 {{ post.excerpt }}
@@ -219,12 +239,16 @@
     </tr>
   </table>
 
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
   <script>
     // Function: Show the table with the given ID and hide other tables.
     function showTable(tableId) {
       const tables = document.querySelectorAll("#table-container table");
       tables.forEach((table) => {
         table.style.display = table.id === tableId ? "table" : "none";
+        if (table.id !== tableId) {
+          table.querySelectorAll(".publication-preview").forEach(stopPreview);
+        }
       });
 
       const navLinks = document.querySelectorAll(".nav-link");
@@ -238,7 +262,26 @@
       });
     }
 
+    function stopPreview(preview) {
+      const video = preview.querySelector("video");
+      video.pause();
+      if (video.readyState > 0) video.currentTime = 0;
+      preview.classList.remove("is-playing");
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".publication-preview").forEach((preview) => {
+        const video = preview.querySelector("video");
+        const play = () => {
+          video.muted = true;
+          preview.classList.add("is-playing");
+          video.play().catch(() => preview.classList.remove("is-playing"));
+        };
+        preview.addEventListener("mouseenter", play);
+        preview.addEventListener("mouseleave", () => stopPreview(preview));
+        preview.addEventListener("focus", play);
+        preview.addEventListener("blur", () => stopPreview(preview));
+      });
       showTable("All Selected Publications");
     });
   </script>

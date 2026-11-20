@@ -99,6 +99,39 @@ span.highlight {
   background-color: #ffffd0;
 }
 
+.publication-preview {
+  position: relative;
+  width: 100%;
+  // Match the PALM thumbnail proportions within the shared publication column.
+  aspect-ratio: 2326 / 1146;
+}
+
+.publication-preview img,
+.publication-preview video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.publication-preview video {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.publication-preview.is-playing video {
+  opacity: 1;
+}
+
+.publication-github {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 //@import "highlights";

@@ -8,6 +8,5 @@ authors: "Xingyu Fu, Siyi Liu, Yinuo Xu, Pan Lu, Guangqiuse Hu, Tianbo Yang, Tar
 venue: "COLM"
 page: https://deeptracereward.github.io/
 arxiv: https://arxiv.org/abs/2509.22646
-sub_fields: "3D Vision and Embodied Perception"
-sub_fields2: "Vision Foundation Models and Multimodal LLMs"
+sub_fields: "Vision Foundation Models and Multimodal LLMs"
 ---

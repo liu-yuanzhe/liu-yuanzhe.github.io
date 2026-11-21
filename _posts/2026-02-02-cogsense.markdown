@@ -1,0 +1,12 @@
+---
+layout: post
+title: "Toward Cognitive Supersensing in Multimodal Large Language Models"
+date: 2026-02-02 00:00:00 +00:00
+image: pubs/2026.CogSense/CogSense.png
+categories: research
+authors: "Boyi Li*, Yifan Shen*, <strong>Yuanzhe Liu*</strong>, Yifan Xu, Jiateng Liu, Xinzhuo Li, Zhengyuan Li, Jingyuan Zhu, Yunhan Zhong, Fangzhou Lan, Jianguo Cao, James M. Rehg, Heng Ji, Ismini Lourentzou, Xu Cao"
+venue: "NeurIPS"
+page: https://pediamed.ai/Cognition-MLLM/cogsense/
+arxiv: https://arxiv.org/abs/2602.01541
+sub_fields: "Vision Foundation Models and Multimodal LLMs"
+---

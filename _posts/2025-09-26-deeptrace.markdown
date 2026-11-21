@@ -9,4 +9,5 @@ venue: "COLM"
 page: https://deeptracereward.github.io/
 arxiv: https://arxiv.org/abs/2509.22646
 sub_fields: "3D Vision and Embodied Perception"
+sub_fields2: "Vision Foundation Models and Multimodal LLMs"
 ---

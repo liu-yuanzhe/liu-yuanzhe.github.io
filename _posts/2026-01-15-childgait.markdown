@@ -9,4 +9,5 @@ venue: "ECCV"
 page: https://pediamedai.com/ChildrenGait/
 arxiv: https://arxiv.org/abs/2608.00371
 sub_fields: "3D Vision and Embodied Perception"
+sub_fields2: "Vision Foundation Models and Multimodal LLMs"
 ---

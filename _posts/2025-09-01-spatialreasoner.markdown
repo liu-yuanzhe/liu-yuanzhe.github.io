@@ -8,5 +8,5 @@ authors: "<strong>Yuanzhe Liu*</strong>, Yifan Shen*, Jingyuan Zhu, Xu Cao, Xiao
 venue: "NeurIPS"
 page: https://plan-lab.github.io/projects/spatialreasoner/
 arxiv: https://arxiv.org/abs/2506.21656
-sub_fields: "Reinforcement Learning"
+sub_fields: "Vision Foundation Models and Multimodal LLMs"
 ---
